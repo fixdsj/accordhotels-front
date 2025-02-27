@@ -1,0 +1,88 @@
+[
+  {
+    "id": "hotel1",
+    "name": "Grand Hôtel Paris",
+    "location": "Paris, France",
+    "price": 199,
+    "rating": 4.8,
+    "image": "https://picsum.photos/500/300",
+    "amenities": [
+      "wifi",
+      "restaurant",
+      "pool",
+      "parking"
+    ],
+    "description": "Hôtel de luxe au cœur de Paris avec vue sur la Tour Eiffel."
+  },
+  {
+    "id": "hotel2",
+    "name": "Seaside Resort",
+    "location": "Nice, France",
+    "price": 149,
+    "rating": 4.5,
+    "image": "https://picsum.photos/500/300",
+    "amenities": [
+      "wifi",
+      "restaurant",
+      "pool"
+    ],
+    "description": "Magnifique resort en bord de mer avec accès direct à la plage."
+  },
+  {
+    "id": "hotel3",
+    "name": "Mountain Lodge",
+    "location": "Chamonix, France",
+    "price": 229,
+    "rating": 4.7,
+    "image": "https://picsum.photos/500/300",
+    "amenities": [
+      "wifi",
+      "restaurant",
+      "parking"
+    ],
+    "description": "Lodge confortable avec vue imprenable sur le Mont Blanc."
+  },
+  {
+    "id": "hotel4",
+    "name": "City Center Hotel",
+    "location": "Barcelona, Spain",
+    "price": 179,
+    "rating": 4.6,
+    "image": "https://picsum.photos/500/300",
+    "amenities": [
+      "wifi",
+      "restaurant"
+    ],
+    "description": "Hôtel moderne situé en plein centre de Barcelone."
+  },
+    {
+        "id": "hotel5",
+        "name": "Historic Palace",
+        "location": "Rome, Italy",
+        "price": 249,
+        "rating": 4.9,
+        "image": "https://picsum.photos/500/300",
+        "amenities": [
+            "wifi",
+            "restaurant",
+            "pool",
+            "parking"
+        ],
+        "description": "Palace datant du 18ème siècle situé au cœur de Rome."
+    },
+    {
+        "id": "hotel6",
+        "name": "Beachfront Resort",
+        "location": "Ibiza, Spain",
+        "price": 199,
+        "rating": 4.8,
+        "image": "https://picsum.photos/500/300",
+        "amenities": [
+            "wifi",
+            "restaurant",
+            "pool",
+            "parking"
+        ],
+        "description": "Resort de luxe en bord de mer avec vue sur la Méditerranée."
+    }
+]
