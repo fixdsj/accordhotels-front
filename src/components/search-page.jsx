@@ -1,17 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import hotelsData from "../sampledata/hotels.json";
 import {
+    CircleParkingIcon,
+    CoffeeIcon,
+    DropletIcon,
+    FlameIcon,
     MapPinIcon,
-    UsersIcon,
+    SearchIcon,
     StarIcon,
-    FireIcon,
-    WifiIcon,
-    TruckIcon,
-} from "@heroicons/react/20/solid"
-import { SearchIcon, CoffeeIcon, DropletIcon } from "lucide-react"
-import { Menu } from "@headlessui/react"
+    UsersIcon,
+    WifiIcon
+} from "lucide-react"
+import {Menu} from "@headlessui/react"
 
 export default function SearchPage() {
     const [destination, setDestination] = useState("")
@@ -27,13 +29,13 @@ export default function SearchPage() {
     })
 
     const handleFilterChange = (filter) => {
-        setFilters((prev) => ({ ...prev, [filter]: !prev[filter] }))
+        setFilters((prev) => ({...prev, [filter]: !prev[filter]}))
     }
 
     const handleSearch = (e) => {
         e.preventDefault()
         // Handle search logic here
-        console.log("Searching with:", { destination, checkIn, checkOut, guests, priceRange, filters })
+        console.log("Searching with:", {destination, checkIn, checkOut, guests, priceRange, filters})
         setHotels(hotelsData.filter((hotel) => {
             const price = hotel.price >= priceRange[0] && hotel.price <= priceRange[1]
             const amenities = Object.entries(filters).every(([key, value]) => !value || hotel.amenities.includes(key))
@@ -74,7 +76,7 @@ export default function SearchPage() {
                                 Destination
                             </label>
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <MapPinIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                <MapPinIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
                             </div>
                             <input
                                 id="destination"
@@ -139,13 +141,15 @@ export default function SearchPage() {
                         <div className="relative">
                             <Menu as="div" className="relative inline-block text-left w-full">
                                 <div>
-                                    <Menu.Button className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                                    <Menu.Button
+                                        className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                                         {guests} voyageur(s)
-                                        <UsersIcon className="ml-2 -mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        <UsersIcon className="ml-2 -mr-1 h-5 w-5 text-gray-400" aria-hidden="true"/>
                                     </Menu.Button>
                                 </div>
 
-                                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <Menu.Items
+                                    className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div className="py-1">
                                         {[1, 2, 3, 4, 5].map((number) => (
                                             <Menu.Item key={number}>
@@ -171,7 +175,7 @@ export default function SearchPage() {
                                 type="submit"
                                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                <SearchIcon className="mr-2 h-5 w-5" aria-hidden="true" />
+                                <SearchIcon className="mr-2 h-5 w-5" aria-hidden="true"/>
                                 Rechercher
                             </button>
                         </div>
@@ -214,10 +218,12 @@ export default function SearchPage() {
                                                 className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                             />
                                             <span className="ml-2 text-gray-700">
-                        {key === "wifi" && <WifiIcon className="inline-block w-5 h-5 mr-1" />}
-                                                {key === "restaurant" && <CoffeeIcon className="inline-block w-5 h-5 mr-1" />}
-                                                {key === "pool" && <DropletIcon className="inline-block w-5 h-5 mr-1" />}
-                                                {key === "parking" && <TruckIcon className="inline-block w-5 h-5 mr-1" />}
+                        {key === "wifi" && <WifiIcon className="inline-block w-5 h-5 mr-1"/>}
+                                                {key === "restaurant" &&
+                                                    <CoffeeIcon className="inline-block w-5 h-5 mr-1"/>}
+                                                {key === "pool" && <DropletIcon className="inline-block w-5 h-5 mr-1"/>}
+                                                {key === "parking" &&
+                                                    <CircleParkingIcon className="inline-block w-5 h-5 mr-1"/>}
                                                 {key.charAt(0).toUpperCase() + key.slice(1)}
                       </span>
                                         </label>
@@ -234,12 +240,13 @@ export default function SearchPage() {
                             {hotels.map((hotel) => (
                                 <div key={hotel.id} className="bg-white shadow rounded-lg overflow-hidden">
                                     <div className="relative h-48">
-                                        <img src={hotel.image || "/placeholder.svg"} alt={hotel.name} className="object-cover w-full h-full" />
+                                        <img src={hotel.image || "/placeholder.svg"} alt={hotel.name}
+                                             className="object-cover w-full h-full"/>
                                         <button
                                             onClick={() => handleFavorite(hotel.id)}
                                             className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
                                         >
-                                            <FireIcon className="h-6 w-6 text-red-500" />
+                                            <FlameIcon className="h-6 w-6 text-red-500"/>
                                         </button>
                                     </div>
                                     <div className="p-6">
@@ -247,12 +254,13 @@ export default function SearchPage() {
                                             <div>
                                                 <h3 className="text-lg font-medium text-gray-900">{hotel.name}</h3>
                                                 <p className="text-sm text-gray-500 flex items-center mt-1">
-                                                    <MapPinIcon className="h-4 w-4 mr-1" />
+                                                    <MapPinIcon className="h-4 w-4 mr-1"/>
                                                     {hotel.location}
                                                 </p>
                                             </div>
-                                            <div className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
-                                                <StarIcon className="h-4 w-4 mr-1" />
+                                            <div
+                                                className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
+                                                <StarIcon className="h-4 w-4 mr-1"/>
                                                 {hotel.rating}
                                             </div>
                                         </div>
@@ -263,10 +271,11 @@ export default function SearchPage() {
                                                     key={amenity}
                                                     className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                                                 >
-                          {amenity === "wifi" && <WifiIcon className="h-4 w-4 mr-1" />}
-                                                    {amenity === "restaurant" && <CoffeeIcon className="h-4 w-4 mr-1" />}
-                                                    {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1" />}
-                                                    {amenity === "parking" && <TruckIcon className="h-4 w-4 mr-1" />}
+                          {amenity === "wifi" && <WifiIcon className="h-4 w-4 mr-1"/>}
+                                                    {amenity === "restaurant" && <CoffeeIcon className="h-4 w-4 mr-1"/>}
+                                                    {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1"/>}
+                                                    {amenity === "parking" &&
+                                                        <CircleParkingIcon className="h-4 w-4 mr-1"/>}
                                                     {amenity}
                         </span>
                                             ))}
