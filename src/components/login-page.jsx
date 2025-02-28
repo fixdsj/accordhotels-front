@@ -3,34 +3,36 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {LockIcon, MailIcon} from "lucide-react";
 import axios from "axios";
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
-
+    const [errors, setErrors] = useState(null);
+    const {login} = useAuth();
     const apiUrl = import.meta.env.VITE_API_URL;
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log("Login attempt with:", {email, password, rememberMe});
-        try {
-            axios.post(`${apiUrl}/users/login`, {email, password, rememberMe})
-                .then((response) => {
-                    console.log("Login response:", response);
+        setErrors(null); // Réinitialiser les erreurs avant de soumettre le formulaire
 
-                    //Storing the token in the local storage
-                    localStorage.setItem("token", response.data.token);
+        axios.post(`${apiUrl}/users/login`, {email, password, rememberMe})
+            .then((response) => {
+                const {user, token} = response.data;
+                login(user, token);
 
-                    // Redirect to the search page
-                    window.location.href = "/";
-                })
-                .catch((error) => {
-                    console.error("Login error:", error);
-                });
-        } catch (error) {
-            console.error("Login error:", error);
-        }
+                // Redirection vers la page d'accueil
+                window.location.href = "/";
+            })
+            .catch((error) => {
+                console.error("Login error:", error);
+                if (error.response) {
+                    setErrors(error.response.data.error || "Une erreur est survenue.");
+                } else {
+                    setErrors("Une erreur est survenue. Veuillez réessayer.");
+                }
+            });
     };
 
     return (
@@ -45,6 +47,13 @@ export default function LoginPage() {
                         </Link>
                     </p>
                 </div>
+                {errors && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                         role="alert">
+                        <strong className="font-bold">Erreur : </strong>
+                        <span className="block sm:inline">{errors}</span>
+                    </div>
+                )}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm space-y-4">
                         <div>

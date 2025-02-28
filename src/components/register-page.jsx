@@ -2,8 +2,10 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {LockIcon, MailIcon, UserIcon} from "lucide-react";
 import axios from "axios";
+import {useAuth} from "../context/AuthContext.jsx";
 
 export default function RegisterPage() {
+    const {login} = useAuth();
     const [formData, setFormData] = useState({
         email: "",
         pseudo: "",
@@ -12,6 +14,7 @@ export default function RegisterPage() {
         role: "normal",
         terms: false,
     });
+    const [errors, setErrors] = useState(null);
     const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleChange = (e) => {
@@ -24,14 +27,31 @@ export default function RegisterPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Registration with:", formData);
+        setErrors(null); // Réinitialiser les erreurs avant de soumettre le formulaire
+
+        const {confirmPassword, terms, ...dataToSend} = formData;
+
+        if (formData.password !== formData.confirmPassword) {
+            setErrors("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
         axios
-            .post(`${apiUrl}/api/users/create`, formData)
+            .post(`${apiUrl}/users/register`, dataToSend)
             .then((response) => {
                 console.log(response.data);
+                const {user, token} = response.data;
+                login(user, token);
+                // Redirection vers la page d'accueil
+                window.location.href = "/";
             })
             .catch((error) => {
                 console.error(error);
+                if (error.response) {
+                    setErrors(error.response.data.error || "Une erreur est survenue.");
+                } else {
+                    setErrors("Une erreur est survenue. Veuillez réessayer.");
+                }
             });
     };
 
@@ -47,6 +67,13 @@ export default function RegisterPage() {
                         </Link>
                     </p>
                 </div>
+                {errors && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                         role="alert">
+                        <strong className="font-bold">Erreur : </strong>
+                        <span className="block sm:inline">{errors}</span>
+                    </div>
+                )}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm space-y-4">
                         <div className="relative">
