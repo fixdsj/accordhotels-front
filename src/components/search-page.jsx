@@ -1,7 +1,5 @@
 "use client"
-
 import {useEffect, useState} from "react";
-import hotelsData from "../sampledata/hotels.json";
 import {
     CircleParkingIcon,
     CoffeeIcon,
@@ -14,34 +12,34 @@ import {
     WifiIcon
 } from "lucide-react"
 import {Menu} from "@headlessui/react"
+import axios from "axios";
+
 
 export default function SearchPage() {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [destination, setDestination] = useState("")
     const [checkIn, setCheckIn] = useState("")
     const [checkOut, setCheckOut] = useState("")
     const [guests, setGuests] = useState("2")
     const [priceRange, setPriceRange] = useState([50, 500])
-    const [filters, setFilters] = useState({
+    const [amenitiesFilter, setAmenitiesFilter] = useState({
         wifi: false,
         restaurant: false,
         pool: false,
         parking: false,
     })
+    const [rating, setRating] = useState(null);
+
 
     const handleFilterChange = (filter) => {
-        setFilters((prev) => ({...prev, [filter]: !prev[filter]}))
+        setAmenitiesFilter((prev) => ({...prev, [filter]: !prev[filter]}))
     }
 
     const handleSearch = (e) => {
         e.preventDefault()
         // Handle search logic here
-        console.log("Searching with:", {destination, checkIn, checkOut, guests, priceRange, filters})
-        setHotels(hotelsData.filter((hotel) => {
-            const price = hotel.price >= priceRange[0] && hotel.price <= priceRange[1]
-            const amenities = Object.entries(filters).every(([key, value]) => !value || hotel.amenities.includes(key))
-            return price && amenities
+        console.log("Searching with:", {destination, checkIn, checkOut, guests, priceRange, amenitiesFilter})
 
-        }))
     }
 
 
@@ -51,18 +49,30 @@ export default function SearchPage() {
         window.location.href = `/booking/${hotelId}`
     }
 
-    const handleFavorite = (hotelId) => {
-        // Handle favorite logic here
-        console.log("Favoriting hotel:", hotelId)
-    }
-    useEffect(() => {
-        document.title = "Recherche - Akkor Hotel"
-    }, [])
 
     const [hotels, setHotels] = useState([]);
+
     useEffect(() => {
-        setHotels(hotelsData)
-    }, [])
+        axios
+            .get(`${apiUrl}/hotels/search`, {})
+            .then((response) => {
+                    //Pour chaque hotel convertir amenities entableau
+                    const hotels = response.data.map((hotel) => {
+                        if (hotel.amenities) {
+                            hotel.amenities = hotel.amenities.split(',').map(amenity => amenity.trim())
+                        }
+                        return hotel
+                    })
+
+                    setHotels(response.data)
+                }
+            )
+            .catch((error) => {
+                console.error(error);
+
+            });
+
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100 pb-12">
@@ -209,7 +219,7 @@ export default function SearchPage() {
                             <div>
                                 <h3 className="font-medium text-gray-900 mb-2">Équipements</h3>
                                 <div className="space-y-2">
-                                    {Object.entries(filters).map(([key, value]) => (
+                                    {Object.entries(amenitiesFilter).map(([key, value]) => (
                                         <label key={key} className="flex items-center">
                                             <input
                                                 type="checkbox"
@@ -240,7 +250,7 @@ export default function SearchPage() {
                             {hotels.map((hotel) => (
                                 <div key={hotel.id} className="bg-white shadow rounded-lg overflow-hidden">
                                     <div className="relative h-48">
-                                        <img src={hotel.image || "/placeholder.svg"} alt={hotel.name}
+                                        <img src={hotel.picture || "/placeholder.svg"} alt={hotel.name}
                                              className="object-cover w-full h-full"/>
                                         <button
                                             onClick={() => handleFavorite(hotel.id)}
@@ -266,19 +276,21 @@ export default function SearchPage() {
                                         </div>
                                         <p className="mt-4 text-sm text-gray-600">{hotel.description}</p>
                                         <div className="mt-4 flex space-x-2">
-                                            {hotel.amenities.map((amenity) => (
-                                                <span
-                                                    key={amenity}
-                                                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-                                                >
-                          {amenity === "wifi" && <WifiIcon className="h-4 w-4 mr-1"/>}
-                                                    {amenity === "restaurant" && <CoffeeIcon className="h-4 w-4 mr-1"/>}
-                                                    {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1"/>}
-                                                    {amenity === "parking" &&
-                                                        <CircleParkingIcon className="h-4 w-4 mr-1"/>}
-                                                    {amenity}
-                        </span>
-                                            ))}
+
+                                            {Array.isArray(hotel.amenities) &&
+                                                hotel.amenities.map((amenity) => (
+                                                    <span key={amenity}
+                                                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            {amenity === "wifi" && <WifiIcon className="h-4 w-4 mr-1"/>}
+                                                        {amenity === "restaurant" &&
+                                                            <CoffeeIcon className="h-4 w-4 mr-1"/>}
+                                                        {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1"/>}
+                                                        {amenity === "parking" &&
+                                                            <CircleParkingIcon className="h-4 w-4 mr-1"/>}
+                                                        {amenity}
+        </span>
+                                                ))
+                                            }
                                         </div>
                                         <div className="mt-6 flex items-center justify-between">
                                             <div>

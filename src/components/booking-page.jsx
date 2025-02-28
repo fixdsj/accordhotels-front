@@ -1,49 +1,56 @@
 import {useParams} from "react-router-dom";
 import {CircleParkingIcon, CoffeeIcon, DropletIcon, MapPinIcon, StarIcon, WifiIcon} from "lucide-react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 
 // Données de test pour un hôtel
-const hotelData = {
-    id: "1",
-    name: "Hôtel de Luxe",
-    location: "Paris, France",
-    description: "Un hôtel magnifique avec une vue imprenable sur la ville.",
-    price: 250,
-    rating: 4.5,
-    amenities: ["wifi", "restaurant", "pool", "parking"],
-    image: "https://picsum.photos/800/600",
-};
 const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export default function BookingPage() {
+    const [hotel, setHotel] = useState(null);
+    const [loading, setLoading] = useState(true);
     const {id} = useParams();
+
     useEffect(() => {
         // Récupérer les données de l'hôtel en fonction de l'ID
-        axios.get(`${apiUrl}/hotels/${id}`, {
+        axios.get(`${apiUrl}/hotels/search`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            params: {id}
         })
             .then((response) => {
-                console.log(response.data);
+                const hotelData = response.data[0];
+
+                // Convertir amenities en tableau
+                if (hotelData.amenities) {
+                    hotelData.amenities = hotelData.amenities.split(',').map(amenity => amenity.trim());
+                }
+
+                console.log(hotelData);
+                setHotel(hotelData);
+                setLoading(false);
             })
             .catch((error) => {
                 console.error(error);
+                setLoading(false);
             });
-
     }, [id]);
 
-    // Pour l'instant, nous utilisons des données de test.
-    // Dans une application réelle, vous récupéreriez les données de l'hôtel en fonction de l'ID.
-    const hotel = hotelData;
+    if (loading) {
+        return <div>Loading...</div>; // Vous pouvez remplacer ceci par un composant de loader plus sophistiqué
+    }
+
+    if (!hotel) {
+        return <div>No hotel data available.</div>;
+    }
 
     return (
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <img src={hotel.image} alt={hotel.name} className="w-full h-96 object-cover rounded-lg"/>
+                    <img src={hotel.picture} alt={hotel.name} className="w-full h-96 object-cover rounded-lg"/>
                 </div>
                 <div>
                     <h1 className="text-3xl font-bold mb-4">{hotel.name}</h1>
@@ -60,7 +67,7 @@ export default function BookingPage() {
                         </div>
                     </div>
                     <div className="mt-4 flex space-x-2">
-                        {hotel.amenities.map((amenity) => (
+                        {hotel.amenities && hotel.amenities.map((amenity) => (
                             <span
                                 key={amenity}
                                 className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
