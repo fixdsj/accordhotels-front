@@ -6,6 +6,8 @@ export default function Header() {
     const logOut = () => {
         // Call the logout function from the context
         logout();
+        // Redirect to the home page
+        window.location.href = "/";
     }
     return (
         <header className="bg-white shadow">
@@ -13,10 +15,12 @@ export default function Header() {
                 <h1 className="text-3xl font-bold text-gray-900 cursor-pointer"
                     onClick={() => window.location.href = "/"}>Akkor Hotel</h1>
                 <div className="flex items-center space-x-4">
-                    <button className="text-gray-500 hover:text-gray-700">Espace employé</button>
-                    <button className="text-gray-500 hover:text-gray-700">Administration</button>
+
                     {user ? (
                         <>
+                            {(user.role === "employee" || user.role === "administrator") && (
+                                <button className="text-gray-500 hover:text-gray-700"  onClick={() => window.location.href = "/admin"}>Administration</button>
+                            )}
                             <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 ">Mon
                                 compte
                             </button>

@@ -1,9 +1,10 @@
 import {useParams} from "react-router-dom";
-import {CircleParkingIcon, CoffeeIcon, DropletIcon, MapPinIcon, StarIcon, WifiIcon} from "lucide-react";
+import {CircleParkingIcon, CoffeeIcon, DropletIcon, LoaderCircleIcon, MapPinIcon, WifiIcon} from "lucide-react";
+import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid'
+import {StarIcon as OutlineStarIcon} from "@heroicons/react/24/outline";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-// Données de test pour un hôtel
 const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
@@ -28,7 +29,6 @@ export default function BookingPage() {
                     hotelData.amenities = hotelData.amenities.split(',').map(amenity => amenity.trim());
                 }
 
-                console.log(hotelData);
                 setHotel(hotelData);
                 setLoading(false);
             })
@@ -39,11 +39,19 @@ export default function BookingPage() {
     }, [id]);
 
     if (loading) {
-        return <div>Loading...</div>; // Vous pouvez remplacer ceci par un composant de loader plus sophistiqué
+        return (
+            <div className="flex items-center justify-center h-96">
+                <LoaderCircleIcon className={"animate-spin h-10 w-10 mx-auto"}/>
+            </div>
+        );
     }
 
     if (!hotel) {
-        return <div>No hotel data available.</div>;
+        return (
+            <div className="flex items-center justify-center h-96">
+                <p className="text-center text-2xl">Hôtel non trouvé.</p>
+            </div>
+        )
     }
 
     return (
@@ -62,8 +70,21 @@ export default function BookingPage() {
                     <div className="flex items-center mb-4">
                         <div
                             className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium flex items-center">
-                            <StarIcon className="h-4 w-4 mr-1"/>
-                            {hotel.rating}
+                            {[...Array(5)].map((_, index) => (
+                                index < hotel.rating ? (
+                                    <SolidStarIcon
+                                        key={index}
+                                        className={`h-4 w-4 mr-1 text-yellow-500`}
+                                    />
+                                ) : (
+                                    <OutlineStarIcon
+                                        key={index}
+                                        className={`h-4 w-4 mr-1 text-yellow-500`}
+                                    />
+                                )
+                            ))}
+
+
                         </div>
                     </div>
                     <div className="mt-4 flex space-x-2">
