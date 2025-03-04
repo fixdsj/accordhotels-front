@@ -39,7 +39,6 @@ export default function AdminPage() {
         amenities: []
     })
 
-    //TODO: Add description field to hotelForm to fix the error
     const handleSearchUsers = (e) => {
         e.preventDefault()
         console.log("Searching users with:", {pseudo, email})
