@@ -27,7 +27,7 @@ export default function RegisterPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setErrors(null); // Réinitialiser les erreurs avant de soumettre le formulaire
+        setErrors(null);
 
         const {confirmPassword, terms, ...dataToSend} = formData;
 

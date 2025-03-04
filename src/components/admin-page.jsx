@@ -1,6 +1,16 @@
 "use client"
 import {useEffect, useState} from "react";
-import {HotelIcon, SearchIcon, UsersIcon} from "lucide-react"
+import {
+    EuroIcon,
+    FileTextIcon,
+    HotelIcon,
+    ImageIcon,
+    MapPinIcon,
+    SearchIcon,
+    SettingsIcon,
+    StarIcon,
+    UsersIcon
+} from "lucide-react"
 import axios from "axios";
 import {useAuth} from "../context/AuthContext.jsx";
 
@@ -19,12 +29,25 @@ export default function AdminPage() {
     const [editedHotels, setEditedHotels] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [hotelForm, setHotelForm] = useState({
+        name: "",
+        location: "",
+        price: 0,
+        description: "",
+        rating: 3,
+        picture: "",
+        amenities: []
+    })
 
+    //TODO: Add description field to hotelForm to fix the error
     const handleSearchUsers = (e) => {
         e.preventDefault()
         console.log("Searching users with:", {pseudo, email})
         axios.get(`${apiUrl}/users/search`, {params: {pseudo, email}})
             .then((response) => {
+                if (response.data.redirect) {
+                    window.location.href = response.data.redirect
+                }
                 setUsers(response.data)
             })
             .catch((error) => {
@@ -42,6 +65,7 @@ export default function AdminPage() {
             })
             .catch((error) => {
                 console.error(error);
+                console.log("error.response.status", error.response.status)
                 setErrorMessage("Erreur lors de la recherche des hôtels.");
             });
     }
@@ -126,6 +150,30 @@ export default function AdminPage() {
         }
     }
 
+    const createHotel = (hotel) => {
+        setErrorMessage("");
+        axios.post(`${apiUrl}/hotels/create`, hotel, {headers: {Authorization: `Bearer ${token}`}})
+            .then(() => {
+                setHotels([...hotels, hotel]);
+                setHotelForm({
+                    name: "",
+                    location: "",
+                    description: "",
+                    price: 0,
+                    rating: 3,
+                    picture: "",
+                    amenities: []
+                });
+                setSuccessMessage("Hôtel ajouté avec succès.");
+                setTimeout(() => setSuccessMessage(""), 3000);
+            })
+            .catch((error) => {
+                if (error.response.data.error) {
+                    setErrorMessage(error.response.data.error);
+                }
+            });
+    }
+
     useEffect(() => {
         if (activeTab === "users") {
             axios.get(`${apiUrl}/users/search`, {headers: {Authorization: `Bearer ${token}`}})
@@ -133,6 +181,9 @@ export default function AdminPage() {
                     setUsers(response.data)
                 })
                 .catch((error) => {
+                    if (error.response.status === 401) {
+                        window.location.href = "/login"
+                    }
                     console.error(error);
                     setErrorMessage("Erreur lors du chargement des utilisateurs.");
                 });
@@ -153,22 +204,24 @@ export default function AdminPage() {
             {/* Tabs */}
             <div className="bg-white shadow-md py-6 mb-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex space-x-4">
-                        <button
-                            onClick={() => setActiveTab("users")}
-                            className={`px-4 py-2 rounded-md ${activeTab === "users" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
-                        >
-                            Utilisateurs
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("hotels")}
-                            className={`px-4 py-2 rounded-md ${activeTab === "hotels" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
-                        >
-                            Hôtels
-                        </button>
+                    <div className="flex space-between items-center justify-between">
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={() => setActiveTab("users")}
+                                className={`px-4 py-2 rounded-md ${activeTab === "users" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
+                            >
+                                Utilisateurs
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("hotels")}
+                                className={`px-4 py-2 rounded-md ${activeTab === "hotels" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
+                            >
+                                Hôtels
+                            </button>
+                        </div>
                         <button
                             onClick={() => setActiveTab("add-hotel")}
-                            className={`px-4 py-2 rounded-md ${activeTab === "users" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
+                            className={`px-4 py-2 rounded-md ${activeTab === "add-hotel" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-700"}`}
                         >
                             Ajouter un hôtel
                         </button>
@@ -380,14 +433,7 @@ export default function AdminPage() {
                                             </label>
                                             <div
                                                 className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <svg className="h-5 w-5 text-gray-400" fill="currentColor"
-                                                     viewBox="0 0 20 20">
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
+                                                <MapPinIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
                                             </div>
                                             <input
                                                 id="hotelLocation"
@@ -471,6 +517,185 @@ export default function AdminPage() {
                             </div>
                         </div>
                     )}
+                    {activeTab === "add-hotel" && (
+                        <div className="lg:w-full">
+                            <div className="flex items-center justify-center mb-6">
+                                <h2 className="text-2xl font-bold text-gray-900">Ajouter un hôtel</h2>
+                            </div>
+                            {successMessage && (
+                                <div
+                                    className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                                    role="alert">
+                                    <strong className="font-bold">Succès! </strong>
+                                    <span className="block sm:inline">{successMessage}</span>
+                                </div>
+                            )}
+                            {errorMessage && (
+                                <div
+                                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                    role="alert">
+                                    <strong className="font-bold">Erreur! </strong>
+                                    <span className="block sm:inline">{errorMessage}</span>
+                                </div>
+                            )}
+                            <div className="bg-white shadow-md py-6 mb-8 rounded-lg">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        createHotel(hotelForm);
+                                    }}
+                                          className=" grid grid-cols-1 gap-4 max-w-lg mx-auto">
+                                        <div className="relative">
+                                            <label htmlFor="hotelName" className="sr-only">
+                                                Nom de l'hôtel
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <HotelIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelName"
+                                                name="hotelName"
+                                                type="text"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Nom de l'hôtel"
+                                                value={hotelForm.name}
+                                                onChange={(e) => setHotelForm({...hotelForm, name: e.target.value})}
+                                            />
+                                        </div>
+
+                                        <div className="relative">
+                                            <label htmlFor="hotelLocation" className="sr-only">
+                                                Localisation
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <MapPinIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelLocation"
+                                                name="hotelLocation"
+                                                type="text"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Localisation"
+                                                value={hotelForm.location}
+                                                onChange={(e) => setHotelForm({...hotelForm, location: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <label htmlFor="hotelPrice" className="sr-only">
+                                                Prix
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <EuroIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelPrice"
+                                                name="hotelPrice"
+                                                type="number"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Prix"
+                                                value={hotelForm.price}
+                                                onChange={(e) => setHotelForm({...hotelForm, price: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <label htmlFor="hotelDescription" className="sr-only">
+                                                Description
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <FileTextIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelDescription"
+                                                name="hotelDescription"
+                                                type="text"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Description"
+                                                value={hotelForm.description}
+                                                onChange={(e) => setHotelForm({
+                                                    ...hotelForm,
+                                                    description: e.target.value
+                                                })}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <label htmlFor="hotelRating" className="sr-only">
+                                                Note
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <StarIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelRating"
+                                                name="hotelRating"
+                                                type="number" min="1" max="5"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Note"
+                                                value={hotelForm.rating}
+                                                onChange={(e) => setHotelForm({...hotelForm, rating: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <label htmlFor="hotelPicture" className="sr-only">
+                                                Image
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <ImageIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <input
+                                                id="hotelPicture"
+                                                name="hotelPicture"
+                                                type="text"
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                placeholder="Image"
+                                                value={hotelForm.picture}
+                                                onChange={(e) => setHotelForm({...hotelForm, picture: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="relative">
+                                            <label htmlFor="hotelAmenities" className="sr-only">
+                                                Équipements
+                                            </label>
+                                            <div
+                                                className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <SettingsIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                                            </div>
+                                            <select
+                                                id="hotelAmenities"
+                                                name="hotelAmenities"
+                                                multiple
+                                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                value={hotelForm.amenities}
+                                                onChange={(e) => {
+                                                    const options = Array.from(e.target.selectedOptions, option => option.value);
+                                                    setHotelForm({...hotelForm, amenities: options});
+                                                }}
+                                            >
+                                                <option value="wifi">Wifi</option>
+                                                <option value="parking">Parking</option>
+                                                <option value="pet-friendly">Animaux acceptés</option>
+                                                <option value="pool">Piscine</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button
+                                                type="submit"
+                                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Ajouter
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </main>
         </div>

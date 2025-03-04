@@ -242,6 +242,7 @@ export default function SearchPage() {
                                         value={priceRange[1]}
                                         onChange={(e) => {
                                             setPriceRange([priceRange[0], Number.parseInt(e.target.value)]);
+                                            fetchHotels()
                                         }}
                                         className="w-full"
                                     />
