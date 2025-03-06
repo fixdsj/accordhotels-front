@@ -8,6 +8,7 @@ import Footer from "./components/footer.jsx";
 import ErrorPage from "./components/error-page.jsx";
 import BookingPage from "./components/booking-page.jsx";
 import AdminPage from "./components/admin-page.jsx";
+import AccountPage from "./components/account-page.jsx";
 import { useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 function App() {
@@ -35,6 +36,7 @@ function App() {
                 <Route path="*" element={<ErrorPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/account" element={<AccountPage />} />
                 <Route path="/" element={<SearchPage />} />
             </Routes>
             <Footer />

@@ -19,9 +19,11 @@ export default function Header() {
                     {user ? (
                         <>
                             {(user.role === "employee" || user.role === "administrator") && (
-                                <button className="text-gray-500 hover:text-gray-700"  onClick={() => window.location.href = "/admin"}>Administration</button>
+                                <button className="text-gray-500 hover:text-gray-700"
+                                        onClick={() => window.location.href = "/admin"}>Administration</button>
                             )}
-                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 ">Mon
+                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 "
+                                    onClick={() => window.location.href = "/account"}>Mon
                                 compte
                             </button>
                             <LogOutIcon className="h-5 w-5 text-indigo-600 cursor-pointer" onClick={logOut}/>
