@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Trash} from 'lucide-react';
-import {useAuth} from '../context/AuthContext.jsx';
+import {useAuth} from '../hooks/useAuth.js';
 import axios from 'axios';
 
 

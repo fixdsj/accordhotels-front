@@ -10,7 +10,7 @@ import BookingPage from "./components/booking-page.jsx";
 import AdminPage from "./components/admin-page.jsx";
 import AccountPage from "./components/account-page.jsx";
 import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 function App() {
     const { token, logout } = useAuth();
 

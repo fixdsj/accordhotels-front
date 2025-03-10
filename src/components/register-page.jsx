@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {LockIcon, MailIcon, UserIcon} from "lucide-react";
 import axios from "axios";
-import {useAuth} from "../context/AuthContext.jsx";
+import {useAuth} from "../hooks/useAuth.js";
 
 export default function RegisterPage() {
     const {login} = useAuth();

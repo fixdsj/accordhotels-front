@@ -1,4 +1,4 @@
-import {useAuth} from "../context/AuthContext.jsx";
+import {useAuth} from "../hooks/useAuth.js";
 import {LogOutIcon} from "lucide-react";
 
 export default function Header() {

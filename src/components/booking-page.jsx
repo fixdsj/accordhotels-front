@@ -4,7 +4,7 @@ import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid'
 import {StarIcon as OutlineStarIcon} from "@heroicons/react/24/outline";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {useAuth} from "../context/AuthContext.jsx";
+import {useAuth} from "../hooks/useAuth.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
