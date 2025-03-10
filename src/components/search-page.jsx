@@ -14,9 +14,11 @@ import {Menu} from "@headlessui/react"
 import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid'
 import {StarIcon as OutlineStarIcon} from "@heroicons/react/24/outline";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export default function SearchPage() {
     const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
     const [destination, setDestination] = useState("")
     const [checkIn, setCheckIn] = useState("")
     const [checkOut, setCheckOut] = useState("")
@@ -95,7 +97,7 @@ export default function SearchPage() {
 
     const handleReservation = (hotelId) => {
         console.log("Reserving hotel:", hotelId)
-        window.location.href = `/booking/${hotelId}`
+        navigate(`/booking/${hotelId}`)
     }
 
     useEffect(() => {

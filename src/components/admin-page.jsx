@@ -14,12 +14,14 @@ import {
 } from "lucide-react"
 import axios from "axios";
 import {useAuth} from "../hooks/useAuth.js";
+import {useNavigate} from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export default function AdminPage() {
     const {user} = useAuth();
+    const navigate = useNavigate();
     const currentRole = user?.role;
     const [activeTab, setActiveTab] = useState("users");
     const [pseudo, setPseudo] = useState("")
@@ -47,7 +49,7 @@ export default function AdminPage() {
         axios.get(`${apiUrl}/users/search`, {params: {pseudo, email}})
             .then((response) => {
                 if (response.data.redirect) {
-                    window.location.href = response.data.redirect
+                    navigate(response.data.redirect);
                 }
                 setUsers(response.data)
             })
@@ -183,7 +185,7 @@ export default function AdminPage() {
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
-                        window.location.href = "/login"
+                        navigate("/login");
                     }
                     console.error(error);
                     setErrorMessage("Erreur lors du chargement des utilisateurs.");

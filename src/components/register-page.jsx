@@ -3,9 +3,11 @@ import {Link} from "react-router-dom";
 import {LockIcon, MailIcon, UserIcon} from "lucide-react";
 import axios from "axios";
 import {useAuth} from "../hooks/useAuth.js";
+import {useNavigate} from "react-router-dom";
 
 export default function RegisterPage() {
     const {login} = useAuth();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
         pseudo: "",
@@ -42,8 +44,9 @@ export default function RegisterPage() {
                 console.log(response.data);
                 const {user, token} = response.data;
                 login(user, token);
-                // Redirection vers la page d'accueil
-                window.location.href = "/";
+                // Redirection vers la page d'accuei
+                navigate("/");
+
             })
             .catch((error) => {
                 console.error(error);

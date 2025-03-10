@@ -2,12 +2,14 @@ import {useEffect, useState} from 'react';
 import {Trash} from 'lucide-react';
 import {useAuth} from '../hooks/useAuth.js';
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 export default function AccountPage() {
     const {user} = useAuth();
+    const navigate = useNavigate();
     const [reservations, setReservations] = useState([]);
     const [userInfo, setUserInfo] = useState({});
     const [activeTab, setActiveTab] = useState("reservations");
@@ -37,7 +39,7 @@ export default function AccountPage() {
         setUserInfo({...userInfo, [field]: value});
     };
     const handleUpdateAccount = () => {
-        const userId = user.userId;
+        const userId = user.id;
         axios.put(`${apiUrl}/users/${userId}`, userInfo, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -53,7 +55,7 @@ export default function AccountPage() {
     }
 
     const handleDeleteAccount = () => {
-        const userId = user.userId;
+        const userId = user.id;
         axios.delete(`${apiUrl}/users/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -62,7 +64,7 @@ export default function AccountPage() {
             .then((response) => {
                 setSuccessMessage(response.data.message);
                 setTimeout(() => {
-                    window.location.href = "/";
+                    navigate('/');
                 }, 2000);
             })
             .catch((error) => {
@@ -72,7 +74,7 @@ export default function AccountPage() {
     };
 
     const handleSearchInfos = () => {
-        const userId = user.userId;
+        const userId = user.id;
         axios.get(`${apiUrl}/users/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -87,7 +89,7 @@ export default function AccountPage() {
             });
     };
     const handleSearchReservations = () => {
-        const userId = user.userId;
+        const userId = user.id;
         axios.get(`${apiUrl}/reservations/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,

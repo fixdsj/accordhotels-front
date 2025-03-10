@@ -1,4 +1,10 @@
+import {ArrowUpIcon} from "lucide-react";
+import {useAuth} from "../hooks/useAuth.js";
+
+
 export default function Footer() {
+    const user = useAuth();
+
     return (
         <footer className="bg-gray-800 text-white py-12">
             <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +19,7 @@ export default function Footer() {
                         <ul className="space-y-2">
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white">
-                                    À propos
+                                    Recherche d'hôtels
                                 </a>
                             </li>
                             <li>
@@ -21,16 +27,27 @@ export default function Footer() {
                                     Comment ça marche
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
-                                    Destinations populaires
+                            {user ? (
+                                <li>
+                                <a href="/account" className="text-gray-300 hover:text-white">
+                                    Mon compte
                                 </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
-                                    Offres spéciales
+                                </li>
+                            ) : (
+                                <>
+                                <li>
+                                <a href="/login" className="text-gray-300 hover:text-white">
+                                    Se connecter
                                 </a>
-                            </li>
+                                </li>
+                                <li>
+                                <a href="/register" className="text-gray-300 hover:text-white">
+                                    S'inscrire
+                                </a>
+                                </li>
+                                </>
+                            )}
+
                         </ul>
                     </div>
                     <div>
@@ -59,19 +76,10 @@ export default function Footer() {
                         </ul>
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold mb-4">Newsletter</h3>
-                        <p className="text-gray-300 mb-2">Inscrivez-vous pour recevoir nos meilleures offres</p>
-                        <div className="flex">
-                            <input
-                                type="email"
-                                placeholder="Votre email"
-                                className="flex-grow px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            />
-                            <button
-                                className="bg-indigo-600 text-white px-4 py-2 rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                S inscrire
-                            </button>
-                        </div>
+                        <a href="#" className="text-gray-300 hover:text-white">
+                            <ArrowUpIcon className="h-5 w-5 inline-block mr-1"/>
+                            Retour en haut
+                        </a>
                     </div>
                 </div>
                 <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">

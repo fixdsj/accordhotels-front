@@ -4,9 +4,11 @@ import {Link} from "react-router-dom";
 import {LockIcon, MailIcon} from "lucide-react";
 import axios from "axios";
 import {useAuth} from "../hooks/useAuth.js";
+import {useNavigate} from "react-router-dom";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [errors, setErrors] = useState(null);
@@ -23,7 +25,7 @@ export default function LoginPage() {
                 login(user, token);
 
                 // Redirection vers la page d'accueil
-                window.location.href = "/";
+                navigate("/");
             })
             .catch((error) => {
                 console.error("Login error:", error);
