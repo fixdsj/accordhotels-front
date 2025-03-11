@@ -17,10 +17,9 @@ import {useAuth} from "../hooks/useAuth.js";
 import {useNavigate} from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-const token = localStorage.getItem("token");
 
 export default function AdminPage() {
-    const {user} = useAuth();
+    const {user, token} = useAuth();
     const navigate = useNavigate();
     const currentRole = user?.role;
     const [activeTab, setActiveTab] = useState("users");

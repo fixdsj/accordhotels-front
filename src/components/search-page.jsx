@@ -96,7 +96,6 @@ export default function SearchPage() {
     }
 
     const handleReservation = (hotelId) => {
-        console.log("Reserving hotel:", hotelId)
         navigate(`/booking/${hotelId}`)
     }
 

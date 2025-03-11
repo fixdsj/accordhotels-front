@@ -6,9 +6,8 @@ import {useNavigate} from "react-router-dom";
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
-const token = localStorage.getItem("token");
 export default function AccountPage() {
-    const {user} = useAuth();
+    const {user, token} = useAuth();
     const navigate = useNavigate();
     const [reservations, setReservations] = useState([]);
     const [userInfo, setUserInfo] = useState({});
@@ -26,7 +25,6 @@ export default function AccountPage() {
         })
             .then((response) => {
                 setSuccessMessage(response.data.message);
-                console.log(' message:', response.data);
                 handleSearchReservations();
             })
             .catch((error) => {
@@ -138,10 +136,14 @@ export default function AccountPage() {
             });
     };
 
-
     useEffect(() => {
+        if ( user) {
         handleSearchReservations();
         handleSearchInfos();
+        }
+        else {
+            navigate('/login');
+        }
     }, []);
 
     return (
@@ -191,7 +193,7 @@ export default function AccountPage() {
                             <div key={reservation.id} className="bg-white shadow-md rounded-lg p-6 mb-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center space-x-2">
-                                        <h3 className="text-xl font-bold">Réservation #{reservation.id}</h3>
+                                        <h3 className="text-xl font-bold">Réservation pour {reservation.hotel.name}</h3>
                                         <p className="text-gray-600">(Réservé
                                             le {new Date(reservation.created_at).toLocaleDateString('fr-FR')})</p>
                                     </div>

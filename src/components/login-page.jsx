@@ -23,7 +23,6 @@ export default function LoginPage() {
             .then((response) => {
                 const {user, token} = response.data;
                 login(user, token);
-
                 // Redirection vers la page d'accueil
                 navigate("/");
             })

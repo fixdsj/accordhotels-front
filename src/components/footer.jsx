@@ -18,7 +18,7 @@ export default function Footer() {
                         <h3 className="text-lg font-bold mb-4">Liens utiles</h3>
                         <ul className="space-y-2">
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
+                                <a href="/" className="text-gray-300 hover:text-white">
                                     Recherche d'hôtels
                                 </a>
                             </li>
@@ -55,22 +55,7 @@ export default function Footer() {
                         <ul className="space-y-2">
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white">
-                                    Centre d aide
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
-                                    Nous contacter
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
-                                    Politique d annulation
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-300 hover:text-white">
-                                    FAQ
+                                    A venir...
                                 </a>
                             </li>
                         </ul>
