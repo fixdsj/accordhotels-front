@@ -28,7 +28,10 @@ export default function Header() {
                                     onClick={() => navigate("/account")}>Mon
                                 compte
                             </button>
-                            <LogOutIcon className="h-5 w-5 text-indigo-600 cursor-pointer" onClick={logOut}/>
+                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" data-cy="logout-icon"
+                                    onClick={logOut}>
+                                <LogOutIcon className="w-6 h-6"/>
+                            </button>
                         </>
                     ) : (
                         <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"

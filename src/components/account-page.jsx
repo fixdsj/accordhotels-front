@@ -266,6 +266,7 @@ export default function AccountPage() {
                                 <label className="block w-1/4 text-gray-700">Pseudo:</label>
                                 <input
                                     type="text"
+                                    name="pseudo"
                                     value={userInfo.pseudo}
                                     onChange={(e) => handleUpdateInfo("pseudo", e.target.value)}
                                     className="border p-2 rounded w-3/4"
@@ -275,6 +276,7 @@ export default function AccountPage() {
                                 <label className="block w-1/4 text-gray-700">Email:</label>
                                 <input
                                     type="email"
+                                    name="email"
                                     value={userInfo.email}
                                     onChange={(e) => handleUpdateInfo("email", e.target.value)}
                                     className="border p-2 rounded w-3/4"
