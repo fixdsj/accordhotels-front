@@ -67,7 +67,6 @@ export default function SearchPage() {
             params.amenities = JSON.stringify(Object.keys(amenitiesFilter).filter((key) => amenitiesFilter[key]));
         }
 
-        console.log("Fetching hotels with params:", params)
 
         axios
             .get(`${apiUrl}/hotels/search`, {params})
