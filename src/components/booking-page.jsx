@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {CircleParkingIcon, CoffeeIcon, DropletIcon, LoaderCircleIcon, MapPinIcon, WifiIcon,CheckCircleIcon} from "lucide-react";
+import {CircleParkingIcon, CoffeeIcon, DropletIcon, LoaderCircleIcon, MapPinIcon, WifiIcon,CheckCircleIcon, DumbbellIcon } from "lucide-react";
 import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid'
 import {StarIcon as OutlineStarIcon} from "@heroicons/react/24/outline";
 import {useEffect, useState} from "react";
@@ -205,6 +205,7 @@ export default function BookingPage() {
                                         {amenity === "restaurant" && <CoffeeIcon className="h-4 w-4 mr-1"/>}
                                         {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1"/>}
                                         {amenity === "parking" && <CircleParkingIcon className="h-4 w-4 mr-1"/>}
+                                        {amenity === "gym" && <DumbbellIcon className="h-4 w-4 mr-1"/>}
                                         {amenity}
                             </span>
                                 ))}

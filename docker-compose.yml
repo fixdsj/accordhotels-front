@@ -1,0 +1,7 @@
+services:
+  akkor_hotel_frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"

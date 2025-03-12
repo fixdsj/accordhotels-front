@@ -8,7 +8,8 @@ import {
     MapPinIcon,
     SearchIcon,
     UsersIcon,
-    WifiIcon
+    WifiIcon,
+    DumbbellIcon
 } from "lucide-react"
 import {Menu} from "@headlessui/react"
 import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid'
@@ -30,6 +31,7 @@ export default function SearchPage() {
         restaurant: false,
         pool: false,
         parking: false,
+        gym: false
     })
     const [hotels, setHotels] = useState(null);
 
@@ -91,7 +93,7 @@ export default function SearchPage() {
         setCheckOut("")
         setGuests("2")
         setPriceRange([50, 500])
-        setAmenitiesFilter({wifi: false, restaurant: false, pool: false, parking: false})
+        setAmenitiesFilter({wifi: false, restaurant: false, pool: false, parking: false, gym: false})
     }
 
     const handleReservation = (hotelId) => {
@@ -266,6 +268,7 @@ export default function SearchPage() {
                                                 {key === "restaurant" &&
                                                     <CoffeeIcon className="inline-block w-5 h-5 mr-1"/>}
                                                 {key === "pool" && <DropletIcon className="inline-block w-5 h-5 mr-1"/>}
+                                                {key === "gym" && <DumbbellIcon className="inline-block w-5 h-5 mr-1"/>}
                                                 {key === "parking" &&
                                                     <CircleParkingIcon className="inline-block w-5 h-5 mr-1"/>}
                                                 {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -360,6 +363,7 @@ export default function SearchPage() {
                                                         {amenity === "restaurant" &&
                                                             <CoffeeIcon className="h-4 w-4 mr-1"/>}
                                                         {amenity === "pool" && <DropletIcon className="h-4 w-4 mr-1"/>}
+                                                        {amenity === "gym" && <DumbbellIcon className="h-4 w-4 mr-1"/>}
                                                         {amenity === "parking" &&
                                                             <CircleParkingIcon className="h-4 w-4 mr-1"/>}
                                                         {amenity}

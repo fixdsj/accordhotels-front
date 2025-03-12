@@ -41,7 +41,6 @@ export default function RegisterPage() {
         axios
             .post(`${apiUrl}/users/register`, dataToSend)
             .then((response) => {
-                console.log(response.data);
                 const {user, token} = response.data;
                 login(user, token);
                 // Redirection vers la page d'accuei
